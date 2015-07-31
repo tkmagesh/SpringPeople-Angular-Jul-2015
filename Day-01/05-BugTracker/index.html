@@ -31,17 +31,36 @@
         10. Persist the bugs in server
     */
     </script>
+    <script src="angular.js"></script>
+    <script>
+        var bugTrackerApp = angular.module("bugTrackerApp", []);
+        bugTrackerApp.controller("bugsController", function($scope){
+            $scope.bugs = [
+                "Object reference not found",
+                "Stack overflow error",
+                "User authentication failure",
+                "Server communication failure"
+            ];
+            $scope.newBugName = '';
+
+            $scope.addNew = function(){
+                $scope.bugs.push($scope.newBugName);
+                $scope.newBugName = '';
+            }
+
+        });
+    </script>
 </head>
-<body>
+<body ng-app="bugTrackerApp">
 <h1>Bug Tracker</h1>
-<div class="content">
-    <div class="stats">[Statistics]</div>
+<div class="content" ng-controller="bugsController">
+    <div class="stats">{{bugs.length}}</div>
     <div class="search">[Search]</div>
     <div class="order">[Order]</div>
     <div class="list">
         <label for="">Bug :</label>
-        <input type="text" name="" id="">
-        <input type="button" value="Add Bug">
+        <input type="text" ng-model="newBugName">
+        <input type="button" value="Add Bug" ng-click="addNew()">
         <input type="button" value="Remove Closed">
         <ol>
             <li>Bug - 1</li>
