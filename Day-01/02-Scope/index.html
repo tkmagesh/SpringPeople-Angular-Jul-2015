@@ -17,11 +17,12 @@
         }
     </style>
     <script src="jquery-1.11.2.js"></script>
+    <script src="angular.js"></script>
     <script>
         Object.prototype.toInt = function(){
             return parseInt(this,10);
         };
-    
+
         //Model
         function SalaryCalculator(){
             this.basic = 0;
@@ -29,45 +30,72 @@
             this.da = 0;
             this.tax = 0;
             this.salary = 0;
-
-            this.onSalaryChange = null;
         }
         SalaryCalculator.prototype.calculate = function(){
             var gross = this.basic + this.hra + this.da;
             var net = gross * ((100-this.tax)/100);
             this.salary = net;
-            if (typeof this.onSalaryChange === "function")
-                this.onSalaryChange();
         }
-        
+
         //View
     $(function(){
-        window.calculator = new SalaryCalculator();
+        angular.bootstrap(document.body,[]);
+        window.scope = angular.element(document.body).scope();
+        window.calculator = scope.calculator = new SalaryCalculator();
         //UI Changes
+
+
         $("#txtBasic").change(function(){
-            calculator.basic = $("#txtBasic").val().toInt();
+            scope.$apply(function(){
+                calculator.basic = $("#txtBasic").val().toInt();
+            });
         });
+        scope.$watch("calculator.basic", function(newValue, oldValue){
+            $("#txtBasic").val(newValue);
+        })
+
         $("#txtHra").change(function(){
-            calculator.hra = $("#txtHra").val().toInt();
+            scope.$apply(function(){
+                calculator.hra = $("#txtHra").val().toInt();
+            });
         });
+        scope.$watch("calculator.hra", function(newValue, oldValue){
+            $("#txtHra").val(newValue);
+        })
+
         $("#txtDa").change(function(){
-            calculator.da = $("#txtDa").val().toInt();
+            scope.$apply(function(){
+                calculator.da = $("#txtDa").val().toInt();
+            });
         });
+        scope.$watch("calculator.da", function(newValue, oldValue){
+            $("#txtDa").val(newValue);
+        })
+
         $("#rangeTax").change(function(){
-            calculator.tax = $("#rangeTax").val().toInt();
+            scope.$apply(function(){
+                calculator.tax = $("#rangeTax").val().toInt();
+            });
         });
+        scope.$watch("calculator.tax", function(newValue, oldValue){
+            $("#rangeTax").val(newValue);
+        });
+
         $("#btnCalculate").click(function(){
-            calculator.calculate();
+            scope.$apply(function(){
+                calculator.calculate();
+            });
 
         });
-        $("#rangeTax").change(function(){
-            $("#spanTax").html(this.value);
-        });
-        
+
+
         //Model Change
-        calculator.onSalaryChange = function(){
-            $("#divResult").html(calculator.salary);
-        }
+        scope.$watch("calculator.salary", function(newValue, oldValue){
+            $("#divResult").html(newValue);
+        });
+        scope.$watch("calculator.tax", function(newValue, oldValue){
+            $("#spanTax").html(newValue);
+        });
 
     });
     </script>
