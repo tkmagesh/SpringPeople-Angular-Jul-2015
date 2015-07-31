@@ -36,25 +36,35 @@
     <script src="angular.js"></script>
     <script>
         var bugTrackerApp = angular.module("bugTrackerApp", []);
+
+        function Bug(defaults){
+            this.name = defaults.name || '';
+            this.isClosed = defaults.isClosed || false;
+        }
+        Bug.prototype.toggle = function(){
+            this.isClosed = !this.isClosed;
+        }
+
+
         bugTrackerApp.controller("bugsController", function($scope){
             $scope.bugs = [
-                { name : "Object reference not found", isClosed : false},
-                { name : "Stack overflow error", isClosed : true},
-                { name : "User authentication failure", isClosed : false},
-                { name : "Server communication failure", isClosed : false},
+                new Bug({ name : "Object reference not found", isClosed : false}),
+                new Bug({ name : "Stack overflow error", isClosed : true}),
+                new Bug({ name : "User authentication failure", isClosed : false}),
+                new Bug({ name : "Server communication failure", isClosed : false})
             ];
             $scope.newBugName = '';
 
             $scope.addNew = function(){
-                var newBug = {
+                var newBug = new Bug({
                     name : $scope.newBugName,
                     isClosed : false
-                };
+                });
                 $scope.bugs.push(newBug);
                 $scope.newBugName = '';
             };
             $scope.toggle = function(bug){
-                bug.isClosed = !bug.isClosed;
+                bug.toggle();
             };
 
         });
