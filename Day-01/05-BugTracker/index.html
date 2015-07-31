@@ -12,7 +12,9 @@
         div{
             margin-bottom: 5px;
         }
-
+        li{
+            cursor: pointer;
+        }
     </style>
     <script>
     /* Use Cases */
@@ -36,17 +38,24 @@
         var bugTrackerApp = angular.module("bugTrackerApp", []);
         bugTrackerApp.controller("bugsController", function($scope){
             $scope.bugs = [
-                "Object reference not found",
-                "Stack overflow error",
-                "User authentication failure",
-                "Server communication failure"
+                { name : "Object reference not found", isClosed : false},
+                { name : "Stack overflow error", isClosed : true},
+                { name : "User authentication failure", isClosed : false},
+                { name : "Server communication failure", isClosed : false},
             ];
             $scope.newBugName = '';
 
             $scope.addNew = function(){
-                $scope.bugs.push($scope.newBugName);
+                var newBug = {
+                    name : $scope.newBugName,
+                    isClosed : false
+                };
+                $scope.bugs.push(newBug);
                 $scope.newBugName = '';
-            }
+            };
+            $scope.toggle = function(bug){
+                bug.isClosed = !bug.isClosed;
+            };
 
         });
     </script>
@@ -63,9 +72,11 @@
         <input type="button" value="Add Bug" ng-click="addNew()">
         <input type="button" value="Remove Closed">
         <ol>
-            <li>Bug - 1</li>
-            <li class="closed">Bug - 2</li>
-            <li>Bug - 3</li>
+            <li
+                ng-repeat="bug in bugs"
+                ng-class="{closed : bug.isClosed}"
+                ng-click="toggle(bug)"
+            >{{bug}}</li>
         </ol>
     </div>
 </div>
