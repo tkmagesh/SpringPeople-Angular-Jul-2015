@@ -78,7 +78,11 @@
                 bug.toggle();
             };
 
-
+            $scope.getClosedCount = function(){
+                return $scope.bugs.filter(function(bug){
+                    return bug.isClosed;
+                }).length;
+            };
         });
     </script>
 </head>
@@ -86,11 +90,17 @@
 <h1>Bug Tracker</h1>
 <div class="content" ng-controller="bugsController">
     <div class="stats">
-        <span class="closed"># of closed bugs </span>
+        <span class="closed">{{getClosedCount()}} </span>
         /
         <span>{{bugs.length}}</span>
     </div>
-    <div class="search">[Search]</div>
+    <div class="search">
+        <label for="">Search</label>
+        <input type="text" ng-model="searchBug.name">
+        <label for="">Closed ?</label>
+        <input type="checkbox" ng-model="searchBug.isClosed">
+        <a href="#" ng-click="searchBug.isClosed = undefined">Show All</a>
+    </div>
     <div class="order">[Order]</div>
     <div class="list">
         <label for="">Bug :</label>
@@ -99,7 +109,7 @@
         <input type="button" value="Remove Closed">
         <ol>
             <li
-                ng-repeat="bug in bugs"
+                ng-repeat="bug in bugs | filter:searchBug"
                 ng-class="{closed : bug.isClosed}"
                 ng-click="toggle(bug)"
             >{{bug}}</li>
