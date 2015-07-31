@@ -24,8 +24,8 @@
         3. Toggle the closed status of a bug
         4. Remove closed bugs
         5. Display Statistics (# of closed bugs / total # of bugs)
-        6. Search for a bug
-        7. Sort the bugs
+        6. Search for a bug - done
+        7. Sort the bugs - done
         8. Improvise how the bug is displayed
         9. Display the "created time"
 
@@ -61,7 +61,9 @@
                 new Bug({ name : "Object reference not found", isClosed : false}),
                 new Bug({ name : "Stack overflow error", isClosed : true}),
                 new Bug({ name : "User authentication failure", isClosed : false}),
-                new Bug({ name : "Server communication failure", isClosed : false})
+                new Bug({ name : "Server communication failure", isClosed : false}),
+                new Bug({ name : "This is a very long bug for demonstration", isClosed : false}),
+                new Bug({ name : "This is another very very looooooong bug for the same purpose", isClosed : false})
             ];
 
             $scope.newBugName = '';
@@ -84,6 +86,12 @@
                 }).length;
             };
         });
+
+        bugTrackerApp.filter("trimText", function(){
+            return function(data){
+                return data.length < 20 ? data : data.substr(0,20) + "...";
+            }
+        })
     </script>
 </head>
 <body ng-app="bugTrackerApp">
@@ -101,7 +109,12 @@
         <input type="checkbox" ng-model="searchBug.isClosed">
         <a href="#" ng-click="searchBug.isClosed = undefined">Show All</a>
     </div>
-    <div class="order">[Order]</div>
+    <div class="order">
+        <label for="">Sort By</label>
+        <input type="text" ng-model="bugSort.name">
+        <label for="">Descending ?</label>
+        <input type="checkbox" ng-model="bugSort.order">
+    </div>
     <div class="list">
         <label for="">Bug :</label>
         <input type="text" ng-model="newBugName">
@@ -109,10 +122,10 @@
         <input type="button" value="Remove Closed">
         <ol>
             <li
-                ng-repeat="bug in bugs | filter:searchBug"
+                ng-repeat="bug in bugs | filter:searchBug | orderBy:bugSort.name:bugSort.order"
                 ng-class="{closed : bug.isClosed}"
                 ng-click="toggle(bug)"
-            >{{bug}}</li>
+            >{{bug.name | trimText}}</li>
         </ol>
     </div>
 </div>
