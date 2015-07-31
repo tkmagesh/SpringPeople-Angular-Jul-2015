@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bug Tracker</title>
+    <style>
+        .closed {
+            color : red;
+            text-decoration: line-through;
+            font-weight: bold;
+        }
+        div{
+            margin-bottom: 5px;
+        }
+
+    </style>
+    <script>
+    /* Use Cases */
+    /*
+        1. List the bugs
+        2. Add a new bug
+        3. Toggle the closed status of a bug
+        4. Remove closed bugs
+        5. Display Statistics (# of closed bugs / total # of bugs)
+        6. Search for a bug
+        7. Sort the bugs
+        8. Improvise how the bug is displayed
+        9. Display the "created time"
+
+        11. Persist the bugs in localStorage
+        10. Persist the bugs in server
+    */
+    </script>
+</head>
+<body>
+<h1>Bug Tracker</h1>
+<div class="content">
+    <div class="stats">[Statistics]</div>
+    <div class="search">[Search]</div>
+    <div class="order">[Order]</div>
+    <div class="list">
+        <label for="">Bug :</label>
+        <input type="text" name="" id="">
+        <input type="button" value="Add Bug">
+        <input type="button" value="Remove Closed">
+        <ol>
+            <li>Bug - 1</li>
+            <li class="closed">Bug - 2</li>
+            <li>Bug - 3</li>
+        </ol>
+    </div>
+</div>
+</body>
+</html>
