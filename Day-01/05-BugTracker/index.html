@@ -37,14 +37,19 @@
     <script>
         var bugTrackerApp = angular.module("bugTrackerApp", []);
 
-        bugTrackerApp.value("Bug", function Bug(defaults){
-            this.name = defaults.name || '';
-            this.isClosed = defaults.isClosed || false;
+
+        bugTrackerApp.factory("Bug", function BugFactory(){
+            function Bug(defaults){
+                this.name = defaults.name || '';
+                this.isClosed = defaults.isClosed || false;
+            }
+            Bug.prototype.toggle = function(){
+                this.isClosed = !this.isClosed;
+            }
+            return Bug;
         });
 
-        /*Bug.prototype.toggle = function(){
-            this.isClosed = !this.isClosed;
-        }*/
+
 
         bugTrackerApp.value("testValue", "lorem ipsum")
 
@@ -73,13 +78,18 @@
                 bug.toggle();
             };
 
+
         });
     </script>
 </head>
 <body ng-app="bugTrackerApp">
 <h1>Bug Tracker</h1>
 <div class="content" ng-controller="bugsController">
-    <div class="stats">{{bugs.length}}</div>
+    <div class="stats">
+        <span class="closed"># of closed bugs </span>
+        /
+        <span>{{bugs.length}}</span>
+    </div>
     <div class="search">[Search]</div>
     <div class="order">[Order]</div>
     <div class="list">
