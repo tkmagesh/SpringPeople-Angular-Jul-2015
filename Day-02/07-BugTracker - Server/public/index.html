@@ -130,24 +130,39 @@
             return Bug;
         });
 
+        bugTrackerApp.factory("bugService", function($http, Bug, $q){
+            return {
+                getAll : function(){
+                    var deferred = $q.defer();
+
+
+                    var promise = $http.get("http://localhost:3000/bugs");
+                    promise.then(function(response){
+                        var result = response.data.map(function(bugData){
+                            return new Bug(bugData);
+                        });
+                        deferred.resolve(result);
+                    });
+
+
+                    return deferred.promise;
+                }
+            }
+        })
 
 
         bugTrackerApp.value("testValue", "lorem ipsum")
 
-        bugTrackerApp.controller("bugsController", function($scope, Bug, bugStorage, $http){
+        bugTrackerApp.controller("bugsController", function($scope, Bug, bugStorage, bugService){
 
             //$scope.bugs = bugStorage.getAll();
             $scope.bugs = [];
 
-            var promise = $http.get("http://localhost:3000/bugs");
-            promise.then(function(response){
-                $scope.bugs = response.data.map(function(bugData){
-                    return new Bug(bugData);
-                });
+            var p = bugService.getAll();
+            p.then(function(bugs){
+                $scope.bugs = bugs;
             });
-            promise.catch(function(error){
 
-            })
 
             $scope.newBugName = '';
 
