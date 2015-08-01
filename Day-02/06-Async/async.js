@@ -52,11 +52,30 @@ function getAdder(){
 
 
 var adder = getAdder();
+adder.add(100,200);
 adder.addCallback(function(result){
     console.log("[SC] result = ", result);
 });
-adder.add(100,200);
 
+/* Async using Promises */
+
+function addPromise(x,y){
+    var promise = new Promise(function(resolve, reject){
+        console.log("[SP] received the values");
+        setTimeout(function(){
+            var result = x + y;
+            console.log("[SP] returning the result");
+            resolve(result);
+        },3000);
+    });
+
+    return promise;
+}
+
+var promise = addPromise(100,200);
+promise.then(function(result){
+    console.log("Result = ", result);
+})
 
 
 
