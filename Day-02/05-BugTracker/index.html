@@ -165,13 +165,15 @@
                     }
                 }
             };
-            $scope.getClosedCount = function(){
-                return $scope.bugs.filter(function(bug){
-                    return bug.isClosed;
-                }).length;
-            };
+
         });
 
+        bugTrackerApp.filter("toClosedCount", function($filter){
+            var builtinFilter = $filter('filter');
+            return function(bugs){
+                return builtinFilter(bugs, {isClosed : true}).length;
+            }
+        });
 
     </script>
 </head>
@@ -179,7 +181,7 @@
 <h1>Bug Tracker</h1>
 <div class="content" ng-controller="bugsController">
     <div class="stats">
-        <span class="closed">{{getClosedCount()}} </span>
+        <span class="closed">{{ bugs | toClosedCount }} </span>
         /
         <span>{{bugs.length}}</span>
     </div>
