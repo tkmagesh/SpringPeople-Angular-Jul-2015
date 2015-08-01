@@ -75,7 +75,7 @@ function addPromise(x,y){
 var promise = addPromise(100,200);
 promise.then(function(result){
     console.log("Result = ", result);
-})
+});
 
 
 
