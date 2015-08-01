@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="scripts/vendor/angular.js"></script>
+	<script src="scripts/custom/greet.js"></script>
+</head>
+<body ng-app="greetApp">
+	<h1>Greeting App</h1>
+	<hr>
+	<div ng-controller="greetController">
+		<label for="">Name :</label>
+		<input type="text" ng-model="name">
+		<input type="button" value="Greet" ng-click="greet()">
+		<div>{{greetMsg}}</div>
+	</div>
+
+</body>
+</html>
