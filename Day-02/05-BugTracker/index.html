@@ -136,8 +136,6 @@
 
         bugTrackerApp.controller("bugsController", function($scope, Bug, bugStorage){
 
-
-
             $scope.bugs = bugStorage.getAll();
 
             $scope.newBugName = '';
@@ -207,7 +205,7 @@
             <li
                 ng-repeat="bug in bugs | filter:searchBug | orderBy:bugSort.name:bugSort.order">
                 <div class="name" ng-class="{closed : bug.isClosed}"
-                ng-click="toggle(bug)">{{bug.name | trimText}}</div>
+                ng-click="toggle(bug)">{{bug.name | trimText:30}}</div>
                 <div class="timestamp">{{bug.createdAt | toMoment}}</div>
 
             </li>
