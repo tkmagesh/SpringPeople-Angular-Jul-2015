@@ -72,11 +72,54 @@
     <script src="moment.js"></script>
 
     <script>
-        var bugTrackerApp = angular.module("bugTrackerApp", []);
 
+        var utils = angular.module("utils", []);
+
+        utils.value("defaultTrimLength", 30);
+        utils.filter("trimText", function(defaultTrimLength){
+            return function(data, trimLength){
+                trimLength = trimLength || defaultTrimLength;
+                return data.length < trimLength ? data : data.substr(0,trimLength) + "...";
+            }
+        });
+
+        utils.value("momentApi", moment);
+        utils.filter("toMoment", function(momentApi){
+            return function(data){
+                return momentApi(data).fromNow();
+            }
+        });
+
+        var bugTrackerApp = angular.module("bugTrackerApp", ["utils"]);
+
+        bugTrackerApp.factory("bugStorage", function(Bug){
+            var storage = window.localStorage;
+            function getAllBugs(){
+                var result = [];
+                for(var i=0; i<storage.length; i++){
+                    var key = storage.key(i);
+                    var data = angular.fromJson(storage.getItem(key));
+                    var bug = new Bug(data);
+                    result.push(bug);
+                }
+                return result;
+            }
+            function saveBug(bug){
+                storage.setItem(bug.id, angular.toJson(bug));
+            }
+            function removeBug(bug){
+                storage.removeItem(bug.id);
+            }
+            return {
+                getAll : getAllBugs,
+                save : saveBug,
+                remove : removeBug
+            }
+        });
 
         bugTrackerApp.factory("Bug", function BugFactory(){
             function Bug(defaults){
+                this.id = defaults.id || Date.now();
                 this.name = defaults.name || '';
                 this.isClosed = defaults.isClosed || false;
                 this.createdAt = defaults.createdAt || new Date();
@@ -91,18 +134,11 @@
 
         bugTrackerApp.value("testValue", "lorem ipsum")
 
-        bugTrackerApp.controller("bugsController", function($scope, Bug){
+        bugTrackerApp.controller("bugsController", function($scope, Bug, bugStorage){
 
-            console.log(arguments);
 
-            $scope.bugs = [
-                new Bug({ name : "Object reference not found", isClosed : false, createdAt : new Date(2015,3 ,4 )}),
-                new Bug({ name : "Stack overflow error", isClosed : true, createdAt : new Date(2015, 5,6 )}),
-                new Bug({ name : "User authentication failure", isClosed : false, createdAt : new Date(2015,6 ,7 )}),
-                new Bug({ name : "Server communication failure", isClosed : false, createdAt : new Date(2015,2 ,1 )}),
-                new Bug({ name : "This is a very long bug for demonstration", isClosed : false, createdAt : new Date(2015, 4, 5)}),
-                new Bug({ name : "This is another very very looooooong bug for the same purpose", isClosed : false, createdAt : new Date(2015,3 ,2 )})
-            ];
+
+            $scope.bugs = bugStorage.getAll();
 
             $scope.newBugName = '';
 
@@ -111,13 +147,24 @@
                     name : $scope.newBugName,
                     isClosed : false
                 });
+                bugStorage.save(newBug);
                 $scope.bugs.push(newBug);
                 $scope.newBugName = '';
             };
             $scope.toggle = function(bug){
                 bug.toggle();
+                bugStorage.save(bug);
             };
 
+            $scope.removeClosed = function(){
+                for(var i=$scope.bugs.length-1; i>=0; i--){
+                    var bug = $scope.bugs[i];
+                    if (bug.isClosed){
+                        bugStorage.remove(bug);
+                        $scope.bugs.splice(i,1);
+                    }
+                }
+            };
             $scope.getClosedCount = function(){
                 return $scope.bugs.filter(function(bug){
                     return bug.isClosed;
@@ -125,17 +172,7 @@
             };
         });
 
-        bugTrackerApp.filter("trimText", function(){
-            return function(data){
-                return data.length < 20 ? data : data.substr(0,20) + "...";
-            }
-        });
 
-        bugTrackerApp.filter("toMoment", function(){
-            return function(data){
-                return moment(data).fromNow();
-            }
-        })
     </script>
 </head>
 <body ng-app="bugTrackerApp">
@@ -163,7 +200,7 @@
         <label for="">Bug :</label>
         <input type="text" ng-model="newBugName">
         <input type="button" value="Add Bug" ng-click="addNew()">
-        <input type="button" value="Remove Closed">
+        <input type="button" value="Remove Closed" ng-click="removeClosed()">
         <ol>
             <li
                 ng-repeat="bug in bugs | filter:searchBug | orderBy:bugSort.name:bugSort.order">
