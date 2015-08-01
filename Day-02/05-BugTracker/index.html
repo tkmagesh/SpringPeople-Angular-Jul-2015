@@ -69,6 +69,8 @@
     */
     </script>
     <script src="angular.js"></script>
+    <script src="moment.js"></script>
+
     <script>
         var bugTrackerApp = angular.module("bugTrackerApp", []);
 
@@ -127,6 +129,12 @@
             return function(data){
                 return data.length < 20 ? data : data.substr(0,20) + "...";
             }
+        });
+
+        bugTrackerApp.filter("toMoment", function(){
+            return function(data){
+                return moment(data).fromNow();
+            }
         })
     </script>
 </head>
@@ -161,7 +169,7 @@
                 ng-repeat="bug in bugs | filter:searchBug | orderBy:bugSort.name:bugSort.order">
                 <div class="name" ng-class="{closed : bug.isClosed}"
                 ng-click="toggle(bug)">{{bug.name | trimText}}</div>
-                <div class="timestamp">{{bug.createdAt}}</div>
+                <div class="timestamp">{{bug.createdAt | toMoment}}</div>
 
             </li>
         </ol>
