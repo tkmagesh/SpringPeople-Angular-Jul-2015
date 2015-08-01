@@ -1,0 +1,34 @@
+{
+  "bugs": [
+    {
+      "id": 1,
+      "name": "index out of range",
+      "isClosed": false,
+      "createdAt": "2015-06-09T18:30:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "stack overflow error",
+      "isClosed": false,
+      "createdAt": "2015-07-19T18:30:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "object reference not set to an instance of an object",
+      "isClosed": false,
+      "createdAt": "2015-07-23T05:30:00.000Z"
+    },
+    {
+      "name": "User authentication fails for valid users",
+      "isClosed": false,
+      "createdAt": "2015-07-23T10:03:58.122Z",
+      "id": 5
+    },
+    {
+      "name": "server communication failure",
+      "isClosed": false,
+      "createdAt": "2015-07-23T18:30:00.000Z",
+      "id": 6
+    }
+  ]
+}

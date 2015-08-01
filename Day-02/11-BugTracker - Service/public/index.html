@@ -120,8 +120,7 @@
            };
         });
 
-        bugTrackerApp.config(function(bugServiceProvider, BugProvider){
-            
+        bugTrackerApp.config(function(bugServiceProvider, BugProvider ){
             bugServiceProvider.setUrl("http://localhost:4000/bugs")
         });
         
@@ -136,14 +135,14 @@
                     result.push(bug);
                 }
                 return result;
-            };
+            }
             bugStorage.prototype.save = function saveBug(bug){
                 storage.setItem(bug.id, angular.toJson(bug));
-            };
-
+            }
             bugStorage.prototype.remove = function removeBug(bug){
                 storage.removeItem(bug.id);
-            };
+            }
+            
         });
 
         bugTrackerApp.factory("Bug", function BugFactory(){
