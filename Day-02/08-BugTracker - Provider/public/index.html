@@ -120,12 +120,11 @@
            };
         });
 
-        bugTrackerApp.value("dummy", "some dummy value");
-
         bugTrackerApp.config(function(bugServiceProvider, BugProvider, dummyProvider){
             console.log(dummyProvider);
             bugServiceProvider.setUrl("http://localhost:4000/bugs")
-        })
+        });
+        
         bugTrackerApp.factory("bugStorage", function(Bug){
             var storage = window.localStorage;
             function getAllBugs(){
